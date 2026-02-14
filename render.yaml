@@ -1,0 +1,46 @@
+services:
+  # 1. The Spring Boot Backend
+  - type: web
+    name: health-office-backend
+    runtime: java
+    env: java
+    rootDirectory: backend
+    buildCommand: ./mvnw clean install -DskipTests
+    startCommand: java -jar target/health-office-backend-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+    region: frankfurt
+    plan: free
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: health-office-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: health-office-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: health-office-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+  # 2. The Flutter Web Frontend
+  - type: web
+    name: health-office-portal
+    runtime: docker
+    dockerContext: .
+    dockerfilePath: Dockerfile.web
+    region: frankfurt
+    plan: free
+    # You might need to add a specialized build script if the environment doesn't have Flutter
+    # But for simplicity, we assume the user might use a Dockerfile or manual setup if Flutter is not native.
+    # Actually, Render doesn't have a native 'flutter' environment. 
+    # Let's use a Dockerfile for the frontend to be safe.
+
+databases:
+  - name: health-office-db
+    plan: free
+    region: frankfurt

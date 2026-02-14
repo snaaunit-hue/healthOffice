@@ -1,0 +1,32 @@
+services:
+  # The Spring Boot Backend
+  - type: web
+    name: health-office-backend
+    runtime: java
+    env: java
+    buildCommand: ./mvnw clean install -DskipTests
+    startCommand: java -jar target/health-office-backend-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+    region: frankfurt # Or your preferred region
+    plan: free
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: health-office-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: health-office-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: health-office-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true # Generates a random secure secret
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+databases:
+  - name: health-office-db
+    plan: free
+    region: frankfurt
