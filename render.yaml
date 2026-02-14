@@ -7,10 +7,11 @@ services:
     region: frankfurt
     plan: free
     envVars:
-      - key: SPRING_DATASOURCE_URL
+      - key: JDBC_DATABASE_URL
         fromDatabase:
           name: health-office-db
           property: connectionString
+        value: jdbc:%s # Prepend jdbc: to the connection string
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: health-office-db
