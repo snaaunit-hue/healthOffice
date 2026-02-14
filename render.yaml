@@ -4,7 +4,7 @@ services:
     name: health-office-backend
     runtime: java
     env: java
-    rootDirectory: backend
+    rootDir: backend
     buildCommand: ./mvnw clean install -DskipTests
     startCommand: java -jar target/health-office-backend-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
     region: frankfurt
