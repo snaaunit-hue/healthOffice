@@ -7,15 +7,21 @@ services:
     region: frankfurt
     plan: free
     envVars:
-      # We use a TOTALLY CUSTOM name to prevent Spring Boot from auto-mapping it
-      - key: INTERNAL_DB_CONNECTION_STRING
+      - key: DB_HOST
         fromDatabase:
           name: health-office-db
-          property: connectionString
-      - key: SPRING_PROFILES_ACTIVE
-        value: prod
-      - key: JWT_SECRET
-        generateValue: true
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: health-office-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: health-office-db
+          property: database
+      # Now we MANUALLY build the SPRING_DATASOURCE_URL with the mandatory jdbc: prefix
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: health-office-db
@@ -24,6 +30,10 @@ services:
         fromDatabase:
           name: health-office-db
           property: password
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: JWT_SECRET
+        generateValue: true
 
   # 2. The Flutter Web Frontend
   - type: web

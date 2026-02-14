@@ -2,12 +2,13 @@ spring:
   main:
     banner-mode: off
   datasource:
-    # We manually build the JDBC URL using our custom variable to ensure the jdbc: prefix is present
-    url: jdbc:${INTERNAL_DB_CONNECTION_STRING}
+    # This will now pick up our MANUALLY CORRECTED SPRING_DATASOURCE_URL
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
-    type: com.zaxxer.hikari.HikariDataSource
   jpa:
-    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     properties:
