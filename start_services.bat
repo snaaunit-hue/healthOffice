@@ -1,0 +1,19 @@
+@echo off
+echo Starting Health Office Portal Environment...
+
+echo 1. Starting Database (Docker)...
+start "Database Service" docker-compose up
+
+echo Waiting for database to initialize...
+timeout /t 10
+
+echo 2. Starting Backend Server (Spring Boot)...
+start "Backend API" cmd /k "cd backend && mvn spring-boot:run"
+
+echo Waiting for backend to start...
+timeout /t 20
+
+echo 3. Starting Frontend Application (Flutter Web)...
+start "Frontend App" cmd /k "flutter run -d edge"
+
+echo All services launched!
