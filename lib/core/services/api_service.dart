@@ -70,7 +70,7 @@ class ApiService {
     return _handleResponse(response);
   }
 
-  Future<dynamic> uploadFile(String path, String filePath) async {
+  Future<dynamic> uploadFile(String path, String fileName, List<int> bytes) async {
     final uri = Uri.parse('${AppConfig.apiBaseUrl}$path');
     final request = http.MultipartRequest('POST', uri);
     
@@ -78,7 +78,7 @@ class ApiService {
       request.headers['Authorization'] = 'Bearer $_accessToken';
     }
     
-    request.files.add(await http.MultipartFile.fromPath('file', filePath));
+    request.files.add(http.MultipartFile.fromBytes('file', bytes, filename: fileName));
     
     final streamedResponse = await request.send().timeout(AppConfig.connectionTimeout);
     final response = await http.Response.fromStream(streamedResponse);

@@ -2,8 +2,8 @@ spring:
   main:
     banner-mode: off
   datasource:
-    # This will now pick up our MANUALLY CORRECTED SPRING_DATASOURCE_URL
-    url: ${SPRING_DATASOURCE_URL}
+    # We use a custom env var name to avoid Spring Boot's auto-mapping of SPRING_DATASOURCE_URL
+    url: jdbc:${RENDER_DATABASE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver

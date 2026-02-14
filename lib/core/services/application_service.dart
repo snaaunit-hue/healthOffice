@@ -65,11 +65,12 @@ class ApplicationService {
     required int applicationId,
     required int userId,
     required String docType,
-    required String filePath,
+    required String fileName,
+    required List<int> bytes,
     bool mandatory = true,
   }) async {
     // 1. Upload file to get URL
-    final uploadResponse = await _api.uploadFile('/documents/upload', filePath);
+    final uploadResponse = await _api.uploadFile('/documents/upload', fileName, bytes);
     final String fileUrl = uploadResponse['fileUrl'];
 
     // 2. Link to application

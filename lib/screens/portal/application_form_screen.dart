@@ -114,8 +114,13 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
         allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
         withData: true,
       );
-      if (result != null && result.files.single.path != null) {
+      if (result != null) {
         final file = result.files.single;
+        if (file.bytes == null) {
+           // On some platforms bytes might be null if not using withData: true, 
+           // but we are using withData: true.
+           return;
+        }
         // Enforce 5MB limit
         if (file.size > 5 * 1024 * 1024) {
           if (mounted) {
@@ -1167,7 +1172,8 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
           applicationId: draft.id,
           userId: auth.actorId!,
           docType: entry.key,
-          filePath: entry.value.path!,
+          fileName: entry.value.name,
+          bytes: entry.value.bytes!,
           mandatory: mandatoryTypes.contains(entry.key),
         );
       }

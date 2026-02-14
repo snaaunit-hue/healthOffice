@@ -7,21 +7,10 @@ services:
     region: frankfurt
     plan: free
     envVars:
-      - key: DB_HOST
+      - key: RENDER_DATABASE_URL
         fromDatabase:
           name: health-office-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: health-office-db
-          property: port
-      - key: DB_NAME
-        fromDatabase:
-          name: health-office-db
-          property: database
-      # Now we MANUALLY build the SPRING_DATASOURCE_URL with the mandatory jdbc: prefix
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+          property: connectionString
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: health-office-db
