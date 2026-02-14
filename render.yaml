@@ -7,12 +7,11 @@ services:
     region: frankfurt
     plan: free
     envVars:
-      # We EXPLICITLY override Render's auto-injected variable with the correct JDBC format
-      - key: SPRING_DATASOURCE_URL
+      # We use a TOTALLY CUSTOM name to prevent Spring Boot from auto-mapping it
+      - key: INTERNAL_DB_CONNECTION_STRING
         fromDatabase:
           name: health-office-db
           property: connectionString
-        value: jdbc:%s 
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: JWT_SECRET
