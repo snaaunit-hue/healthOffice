@@ -7,11 +7,16 @@ services:
     region: frankfurt
     plan: free
     envVars:
-      - key: JDBC_DATABASE_URL
+      # We EXPLICITLY override Render's auto-injected variable with the correct JDBC format
+      - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: health-office-db
           property: connectionString
-        value: jdbc:%s # Prepend jdbc: to the connection string
+        value: jdbc:%s 
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: JWT_SECRET
+        generateValue: true
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: health-office-db
@@ -20,10 +25,6 @@ services:
         fromDatabase:
           name: health-office-db
           property: password
-      - key: JWT_SECRET
-        generateValue: true
-      - key: SPRING_PROFILES_ACTIVE
-        value: prod
 
   # 2. The Flutter Web Frontend
   - type: web
