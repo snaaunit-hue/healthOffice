@@ -2,7 +2,6 @@ services:
   # 1. The Spring Boot Backend
   - type: web
     name: health-office-backend
-    runtime: java
     env: java
     rootDir: backend
     buildCommand: ./mvnw clean install -DskipTests
