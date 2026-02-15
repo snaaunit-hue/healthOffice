@@ -8,9 +8,12 @@ import '../../core/providers/auth_provider.dart';
 import '../../core/services/api_service.dart';
 import '../../core/services/application_service.dart';
 import '../../core/utils/validators.dart';
+import '../../core/services/facility_service.dart';
 
 class ApplicationFormScreen extends StatefulWidget {
-  const ApplicationFormScreen({super.key});
+  final int? preselectedFacilityId;
+
+  const ApplicationFormScreen({super.key, this.preselectedFacilityId});
 
   @override
   State<ApplicationFormScreen> createState() => _ApplicationFormScreenState();
@@ -65,6 +68,8 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
   final Map<String, PlatformFile> _selectedFiles = {};
 
   late AnimationController _progressAnim;
+  bool _facilityFieldsLocked = false;
+  bool _facilityPrefillLoaded = false;
 
   @override
   void initState() {
@@ -73,6 +78,40 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
+    if (widget.preselectedFacilityId != null) {
+      _loadFacilityAndPrefill();
+    } else {
+      _facilityPrefillLoaded = true;
+    }
+  }
+
+  Future<void> _loadFacilityAndPrefill() async {
+    if (widget.preselectedFacilityId == null) return;
+    try {
+      final api = context.read<ApiService>();
+      final service = FacilityService(api);
+      final profile = await service.getProfile(widget.preselectedFacilityId!);
+      final f = profile.facility;
+      if (mounted) {
+        setState(() {
+          _facilityNameCtrl.text = f.nameAr;
+          if (f.nameEn != null && f.nameEn!.isNotEmpty) {}
+          _facilityType = f.facilityType;
+          _districtCtrl.text = f.district ?? '';
+          _areaCtrl.text = f.area ?? '';
+          _streetCtrl.text = f.street ?? '';
+          _propertyOwnerCtrl.text = f.propertyOwner ?? '';
+          _roomsCountCtrl.text = f.roomsCount?.toString() ?? '';
+          _specializationsCtrl.text = f.specialty ?? '';
+          if (f.latitude != null) _latCtrl.text = f.latitude.toString();
+          if (f.longitude != null) _lonCtrl.text = f.longitude.toString();
+          _facilityFieldsLocked = true;
+          _facilityPrefillLoaded = true;
+        });
+      }
+    } catch (_) {
+      if (mounted) setState(() => _facilityPrefillLoaded = true);
+    }
   }
 
   @override
@@ -208,7 +247,7 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
           onPressed: () => context.go('/portal/applications'),
         ),
       ),
-      body: _isSubmitting
+      body: _isSubmitting || (widget.preselectedFacilityId != null && !_facilityPrefillLoaded)
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -377,6 +416,28 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
           _sectionHeader(loc.translate('facilityData'), Icons.business),
           const SizedBox(height: 16),
 
+          if (_facilityFieldsLocked)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppTheme.infoBlu.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppTheme.infoBlu.withOpacity(0.3)),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.lock, color: AppTheme.infoBlu, size: 18),
+                    const SizedBox(width: 8),
+                    Text(
+                      'بيانات المنشأة مقفلة (من ملف المنشأة)',
+                      style: TextStyle(color: AppTheme.infoBlu, fontSize: 12, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           // Facility Type
           _fieldWithHelp(
             loc.translate('fieldHelp_facilityType'),
@@ -397,7 +458,7 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
                 _dropItem('PHARMACY', loc.translate('pharmacy')),
                 _dropItem('OTHER', loc.translate('otherFacility')),
               ],
-              onChanged: (v) => setState(() => _facilityType = v!),
+              onChanged: _facilityFieldsLocked ? null : (v) => setState(() => _facilityType = v!),
             ),
           ),
           const SizedBox(height: 16),
@@ -413,9 +474,9 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
               _dropItem('NEW', loc.translate('newLicense')),
               _dropItem('RENEWAL', loc.translate('renewal')),
             ],
-            onChanged: (v) => setState(() {
+            onChanged: _facilityFieldsLocked ? null : (v) => setState(() {
               _licenseType = v!;
-              _currentStep = 0; // Reset to recalculate steps
+              _currentStep = 0;
             }),
           ),
           const SizedBox(height: 16),
@@ -423,6 +484,7 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
           // Specializations
           TextFormField(
             controller: _specializationsCtrl,
+            readOnly: _facilityFieldsLocked,
             decoration: InputDecoration(
               labelText: loc.translate('specializations'),
               prefixIcon: const Icon(Icons.medical_services),
@@ -436,6 +498,7 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
             loc.translate('fieldHelp_facilityName'),
             TextFormField(
               controller: _facilityNameCtrl,
+              readOnly: _facilityFieldsLocked,
               decoration: InputDecoration(
                 labelText: '${loc.translate('facilityName')} *',
                 prefixIcon: const Icon(Icons.drive_file_rename_outline),
@@ -451,6 +514,7 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
               Expanded(
                 child: TextFormField(
                   controller: _districtCtrl,
+                  readOnly: _facilityFieldsLocked,
                   decoration: InputDecoration(
                     labelText: '${loc.translate('district')} *',
                     prefixIcon: const Icon(Icons.location_city),
@@ -462,6 +526,7 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
               Expanded(
                 child: TextFormField(
                   controller: _areaCtrl,
+                  readOnly: _facilityFieldsLocked,
                   decoration: InputDecoration(
                     labelText: '${loc.translate('area')} *',
                     prefixIcon: const Icon(Icons.map),
@@ -475,6 +540,7 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
 
           TextFormField(
             controller: _streetCtrl,
+            readOnly: _facilityFieldsLocked,
             decoration: InputDecoration(
               labelText: loc.translate('street'),
               prefixIcon: const Icon(Icons.add_road),
@@ -496,13 +562,14 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
                     _dropItem('OWNED', loc.translate('owned')),
                     _dropItem('RENTED', loc.translate('rented')),
                   ],
-                  onChanged: (v) => setState(() => _propertyStatus = v!),
+                  onChanged: _facilityFieldsLocked ? null : (v) => setState(() => _propertyStatus = v!),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: TextFormField(
                   controller: _propertyOwnerCtrl,
+                  readOnly: _facilityFieldsLocked,
                   decoration: InputDecoration(
                     labelText: '${loc.translate('propertyOwner')} *',
                     prefixIcon: const Icon(Icons.person),
@@ -528,7 +595,7 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
                     _dropItem('OWNED', loc.translate('owned')),
                     _dropItem('RENTED', loc.translate('rented')),
                   ],
-                  onChanged: (v) => setState(() => _parkingStatus = v!),
+                  onChanged: _facilityFieldsLocked ? null : (v) => setState(() => _parkingStatus = v!),
                 ),
               ),
               const SizedBox(width: 12),
@@ -537,6 +604,7 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
                   loc.translate('fieldHelp_roomsCount'),
                   TextFormField(
                     controller: _roomsCountCtrl,
+                    readOnly: _facilityFieldsLocked,
                     decoration: InputDecoration(
                       labelText: '${loc.translate('roomsCount')} *',
                       prefixIcon: const Icon(Icons.meeting_room),
@@ -557,6 +625,7 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
               Expanded(
                 child: TextFormField(
                   controller: _latCtrl,
+                  readOnly: _facilityFieldsLocked,
                   decoration: InputDecoration(
                     labelText: loc.translate('latitude'),
                     prefixIcon: const Icon(Icons.explore),
@@ -568,6 +637,7 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
               Expanded(
                 child: TextFormField(
                   controller: _lonCtrl,
+                  readOnly: _facilityFieldsLocked,
                   decoration: InputDecoration(
                     labelText: loc.translate('longitude'),
                     prefixIcon: const Icon(Icons.explore),
@@ -578,7 +648,7 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
               const SizedBox(width: 8),
               IconButton(
                 icon: const Icon(Icons.my_location, color: AppTheme.primaryGreen),
-                onPressed: () => setState(() {
+                onPressed: _facilityFieldsLocked ? null : () => setState(() {
                   _latCtrl.text = "15.3694";
                   _lonCtrl.text = "44.1910";
                 }),
@@ -1158,8 +1228,18 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen>
         'longitude': double.tryParse(_lonCtrl.text),
       };
 
+      final facilityId = widget.preselectedFacilityId ?? auth.facilityId;
+      if (facilityId == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('يجب ربط المنشأة بحسابك أولاً'), backgroundColor: AppTheme.errorRed),
+          );
+          setState(() => _isSubmitting = false);
+        }
+        return;
+      }
       final draft =
-          await service.createDraft(auth.facilityId!, auth.actorId!, appData);
+          await service.createDraft(facilityId, auth.actorId!, appData);
 
       // Upload docs
       final mandatoryTypes = Validators.getRequiredDocuments(_facilityType)

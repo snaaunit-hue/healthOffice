@@ -21,4 +21,8 @@ public class FacilityDto {
     private Double latitude;
     private Double longitude;
     private Boolean isActive;
+    private String governorate;
+    private String sector;
+    private String specialty;
+    private String operationalStatus;
 }

@@ -18,6 +18,17 @@ public class PortalController {
     private final ApplicationService applicationService;
     private final NotificationService notificationService;
     private final PaymentService paymentService;
+    private final FacilityService facilityService;
+
+    @GetMapping("/facilities")
+    public ResponseEntity<List<FacilityDto>> getMyFacilities(@RequestParam Long userId) {
+        return ResponseEntity.ok(facilityService.getFacilitiesForUser(userId));
+    }
+
+    @GetMapping("/facilities/{id}")
+    public ResponseEntity<FacilityProfileDto> getFacilityProfile(@PathVariable Long id) {
+        return ResponseEntity.ok(facilityService.getProfile(id));
+    }
 
     @PostMapping("/applications")
     public ResponseEntity<ApplicationDto> createDraft(

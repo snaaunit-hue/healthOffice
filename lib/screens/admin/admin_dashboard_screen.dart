@@ -68,6 +68,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
     final menuItems = [
       {'icon': Icons.dashboard, 'key': 'dashboard', 'path': '/admin'},
+      {'icon': Icons.business, 'key': 'facilities', 'path': '/admin/facilities'},
       {'icon': Icons.description, 'key': 'applications', 'path': '/admin/applications'},
       {'icon': Icons.search, 'key': 'inspections', 'path': '/admin/inspections'},
       {'icon': Icons.payment, 'key': 'payments', 'path': '/admin/payments'},

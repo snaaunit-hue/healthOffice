@@ -10,5 +10,7 @@ public interface LicenseRepository extends JpaRepository<License, Long> {
 
     List<License> findByApplicationId(Long applicationId);
 
+    java.util.List<License> findByApplication_Facility_IdOrderByIssueDateDesc(Long facilityId, org.springframework.data.domain.Pageable pageable);
+
     long countByExpiryDateBefore(java.time.LocalDate date);
 }

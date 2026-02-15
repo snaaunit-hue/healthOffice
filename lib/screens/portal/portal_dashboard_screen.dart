@@ -6,9 +6,46 @@ import '../../core/providers/auth_provider.dart';
 import '../../core/providers/locale_provider.dart';
 import '../../core/providers/theme_provider.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/models/facility_model.dart';
+import '../../core/services/api_service.dart';
+import '../../core/services/facility_service.dart';
 
-class PortalDashboardScreen extends StatelessWidget {
+class PortalDashboardScreen extends StatefulWidget {
   const PortalDashboardScreen({super.key});
+
+  @override
+  State<PortalDashboardScreen> createState() => _PortalDashboardScreenState();
+}
+
+class _PortalDashboardScreenState extends State<PortalDashboardScreen> {
+  List<Facility> _facilities = [];
+  bool _facilitiesLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFacilities();
+  }
+
+  Future<void> _loadFacilities() async {
+    final auth = context.read<AuthProvider>();
+    if (auth.actorId == null) {
+      setState(() => _facilitiesLoading = false);
+      return;
+    }
+    setState(() => _facilitiesLoading = true);
+    try {
+      final api = context.read<ApiService>();
+      final service = FacilityService(api);
+      final list = await service.getMyFacilities(auth.actorId!);
+      if (mounted) setState(() {
+        _facilities = list;
+        _facilitiesLoading = false;
+      });
+    } catch (_) {
+      if (mounted) setState(() => _facilitiesLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +123,31 @@ class PortalDashboardScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
+            if (_facilities.isNotEmpty) ...[
+              Text(loc.translate('myFacilities'), style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 12),
+              _facilitiesLoading
+                  ? const Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator()))
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _facilities.length,
+                      itemBuilder: (context, i) {
+                        final f = _facilities[i];
+                        return Card(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: ListTile(
+                            leading: const Icon(Icons.business, color: AppTheme.primaryGreen),
+                            title: Text(f.nameAr),
+                            subtitle: Text(f.district ?? f.operationalStatus ?? ''),
+                            trailing: const Icon(Icons.chevron_right),
+                            onTap: () => context.push('/portal/facilities/${f.id}'),
+                          ),
+                        );
+                      },
+                    ),
+              const SizedBox(height: 24),
+            ],
             Text(loc.translate('services'), style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             GridView.count(

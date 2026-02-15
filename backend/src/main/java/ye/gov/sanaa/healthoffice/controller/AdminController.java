@@ -23,6 +23,7 @@ public class AdminController {
     private final DashboardService dashboardService;
     private final LicenseService licenseService;
     private final AdminService adminService;
+    private final FacilityService facilityService;
 
     // ===== Dashboard =====
     @GetMapping("/dashboard/stats")
@@ -234,6 +235,26 @@ public class AdminController {
     @GetMapping("/employees/{id}")
     public ResponseEntity<AdminDto> getEmployee(@PathVariable Long id) {
         return ResponseEntity.ok(adminService.getEmployee(id));
+    }
+
+    // ===== Facilities (filter, operational status) =====
+    @GetMapping("/facilities")
+    public ResponseEntity<Page<FacilityDto>> getFacilities(
+            @RequestParam(required = false) String facilityType,
+            @RequestParam(required = false) String governorate,
+            @RequestParam(required = false) String district,
+            @RequestParam(required = false) String operationalStatus,
+            Pageable pageable) {
+        return ResponseEntity.ok(facilityService.getAllFiltered(
+                facilityType, governorate, district, operationalStatus, pageable));
+    }
+
+    @PutMapping("/facilities/{id}/operational-status")
+    public ResponseEntity<FacilityDto> updateFacilityOperationalStatus(
+            @PathVariable Long id,
+            @RequestParam Long adminId,
+            @RequestParam String operationalStatus) {
+        return ResponseEntity.ok(facilityService.updateOperationalStatus(id, operationalStatus, adminId));
     }
 
     // ===== Facility User Management =====

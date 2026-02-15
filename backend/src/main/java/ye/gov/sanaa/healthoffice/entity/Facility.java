@@ -62,6 +62,19 @@ public class Facility {
     @Builder.Default
     private Boolean isActive = true;
 
+    @Column(length = 100)
+    private String governorate;
+
+    @Column(length = 50)
+    private String sector;
+
+    @Column(length = 255)
+    private String specialty;
+
+    @Column(name = "operational_status", length = 30, nullable = false)
+    @Builder.Default
+    private String operationalStatus = "ACTIVE"; // ACTIVE, CLOSED, SUSPENDED, UNDER_REVIEW
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 

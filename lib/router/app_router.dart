@@ -16,7 +16,9 @@ import '../screens/portal/portal_dashboard_screen.dart';
 import '../screens/portal/application_form_screen.dart';
 import '../screens/portal/application_detail_screen.dart';
 import '../screens/portal/my_applications_screen.dart';
+import '../screens/portal/facility_profile_screen.dart';
 import '../screens/admin/admin_dashboard_screen.dart';
+import '../screens/admin/admin_facilities_screen.dart';
 import '../screens/admin/admin_applications_screen.dart';
 import '../screens/admin/admin_application_detail_screen.dart';
 import '../screens/admin/admin_inspections_screen.dart';
@@ -56,8 +58,22 @@ GoRouter createRouter(AuthProvider authProvider) {
 
       // ===== Portal (Facility Users) =====
       GoRoute(path: '/portal', builder: (_, __) => const PortalDashboardScreen()),
+      GoRoute(
+        path: '/portal/facilities/:id',
+        builder: (_, state) => FacilityProfileScreen(
+          facilityId: int.parse(state.pathParameters['id']!),
+        ),
+      ),
       GoRoute(path: '/portal/applications', builder: (_, __) => const MyApplicationsScreen()),
-      GoRoute(path: '/portal/applications/new', builder: (_, __) => const ApplicationFormScreen()),
+      GoRoute(
+        path: '/portal/applications/new',
+        builder: (_, state) {
+          final fid = state.uri.queryParameters['facilityId'];
+          return ApplicationFormScreen(
+            preselectedFacilityId: fid != null && fid.isNotEmpty ? int.tryParse(fid) : null,
+          );
+        },
+      ),
       GoRoute(
         path: '/portal/applications/:id',
         builder: (_, state) => ApplicationDetailScreen(
@@ -67,6 +83,7 @@ GoRouter createRouter(AuthProvider authProvider) {
 
       // ===== Admin Dashboard =====
       GoRoute(path: '/admin', builder: (_, __) => const AdminDashboardScreen()),
+      GoRoute(path: '/admin/facilities', builder: (_, __) => const AdminFacilitiesScreen()),
       GoRoute(path: '/admin/applications', builder: (_, __) => const AdminApplicationsScreen()),
       GoRoute(
         path: '/admin/applications/:id',

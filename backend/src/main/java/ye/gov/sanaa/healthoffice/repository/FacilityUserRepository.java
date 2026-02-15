@@ -8,6 +8,8 @@ import java.util.List;
 public interface FacilityUserRepository extends JpaRepository<FacilityUser, Long> {
     Optional<FacilityUser> findByPhoneNumber(String phoneNumber);
 
+    List<FacilityUser> findAllByPhoneNumber(String phoneNumber);
+
     List<FacilityUser> findByFacilityId(Long facilityId);
 
     boolean existsByPhoneNumber(String phoneNumber);

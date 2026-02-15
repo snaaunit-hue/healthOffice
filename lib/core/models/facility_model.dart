@@ -13,6 +13,10 @@ class Facility {
   final String? propertyOwner;
   final int? roomsCount;
   final bool? isActive;
+  final String? governorate;
+  final String? sector;
+  final String? specialty;
+  final String? operationalStatus;
 
   Facility({
     this.id,
@@ -29,6 +33,10 @@ class Facility {
     this.propertyOwner,
     this.roomsCount,
     this.isActive,
+    this.governorate,
+    this.sector,
+    this.specialty,
+    this.operationalStatus,
   });
 
   factory Facility.fromJson(Map<String, dynamic> json) {
@@ -47,6 +55,10 @@ class Facility {
       propertyOwner: json['propertyOwner'],
       roomsCount: json['roomsCount'],
       isActive: json['isActive'],
+      governorate: json['governorate'],
+      sector: json['sector'],
+      specialty: json['specialty'],
+      operationalStatus: json['operationalStatus'],
     );
   }
 
@@ -64,5 +76,38 @@ class Facility {
     'propertyOwner': propertyOwner,
     'roomsCount': roomsCount,
     'isActive': isActive,
+    'governorate': governorate,
+    'sector': sector,
+    'specialty': specialty,
+    'operationalStatus': operationalStatus,
   };
+}
+
+class FacilityProfile {
+  final Facility facility;
+  final String? currentLicenseNumber;
+  final String? currentLicenseStatus;
+  final String? licenseExpiryDate;
+  final int inspectionsCount;
+  final int applicationsCount;
+
+  FacilityProfile({
+    required this.facility,
+    this.currentLicenseNumber,
+    this.currentLicenseStatus,
+    this.licenseExpiryDate,
+    this.inspectionsCount = 0,
+    this.applicationsCount = 0,
+  });
+
+  factory FacilityProfile.fromJson(Map<String, dynamic> json) {
+    return FacilityProfile(
+      facility: Facility.fromJson(json['facility'] ?? {}),
+      currentLicenseNumber: json['currentLicenseNumber'],
+      currentLicenseStatus: json['currentLicenseStatus'],
+      licenseExpiryDate: json['licenseExpiryDate']?.toString(),
+      inspectionsCount: json['inspectionsCount'] ?? 0,
+      applicationsCount: json['applicationsCount'] ?? 0,
+    );
+  }
 }
