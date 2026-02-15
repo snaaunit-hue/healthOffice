@@ -51,10 +51,10 @@ public class AdminService {
             }
         }
         if (roles.isEmpty()) {
-            // Default role if none provided, maybe fail? Or find "EMPLOYEE" role.
-            // For now, let's assume at least one must be valid if logic requires role.
-            Role defaultRole = roleRepository.findByCode("EMPLOYEE")
-                    .orElseThrow(() -> new RuntimeException("Default EMPLOYEE role not found"));
+            Role defaultRole = roleRepository.findByCode("LICENSING_OFFICER")
+                    .or(() -> roleRepository.findByCode("SYSTEM_ADMIN"))
+                    .or(() -> roleRepository.findAll().stream().findFirst())
+                    .orElseThrow(() -> new RuntimeException("No roles found in system. Please run seed data."));
             roles.add(defaultRole);
         }
         admin.setRoles(roles);

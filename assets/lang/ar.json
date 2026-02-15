@@ -143,6 +143,7 @@
   "longitude": "خط الطول",
   "totalFacilities": "إجمالي المنشآت",
   "facilities": "المنشآت",
+  "rolesPermissions": "الأدوار والصلاحيات",
   "expiringSoon": "تراخيص تنتهي قريباً",
   "searchHint": "البحث برقم الهوية أو الترخيص...",
   "addStaff": "إضافة كادر",

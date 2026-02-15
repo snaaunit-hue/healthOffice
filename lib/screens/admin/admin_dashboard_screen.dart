@@ -76,6 +76,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       {'icon': Icons.card_membership, 'key': 'licenses', 'path': '/admin/licenses'},
       {'icon': Icons.notifications, 'key': 'notifications', 'path': '/admin/notifications'},
       {'icon': Icons.people, 'key': 'employees', 'path': '/admin/employees'},
+      {'icon': Icons.badge, 'key': 'rolesPermissions', 'path': '/admin/roles'},
       {'icon': Icons.person_add_alt_1, 'key': 'users', 'path': '/admin/users'},
       {'icon': Icons.web, 'key': 'media', 'path': '/admin/media'},
       {'icon': Icons.settings, 'key': 'settings', 'path': '/admin/settings'},

@@ -34,7 +34,7 @@ public class Admin {
     @Column(length = 150)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "is_active", nullable = false)
     @Builder.Default
     private boolean enabled = true;
 

@@ -19,6 +19,7 @@ import '../screens/portal/my_applications_screen.dart';
 import '../screens/portal/facility_profile_screen.dart';
 import '../screens/admin/admin_dashboard_screen.dart';
 import '../screens/admin/admin_facilities_screen.dart';
+import '../screens/admin/admin_roles_screen.dart';
 import '../screens/admin/admin_applications_screen.dart';
 import '../screens/admin/admin_application_detail_screen.dart';
 import '../screens/admin/admin_inspections_screen.dart';
@@ -84,6 +85,7 @@ GoRouter createRouter(AuthProvider authProvider) {
       // ===== Admin Dashboard =====
       GoRoute(path: '/admin', builder: (_, __) => const AdminDashboardScreen()),
       GoRoute(path: '/admin/facilities', builder: (_, __) => const AdminFacilitiesScreen()),
+      GoRoute(path: '/admin/roles', builder: (_, __) => const AdminRolesScreen()),
       GoRoute(path: '/admin/applications', builder: (_, __) => const AdminApplicationsScreen()),
       GoRoute(
         path: '/admin/applications/:id',

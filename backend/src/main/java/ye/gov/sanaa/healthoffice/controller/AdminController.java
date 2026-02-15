@@ -24,6 +24,7 @@ public class AdminController {
     private final LicenseService licenseService;
     private final AdminService adminService;
     private final FacilityService facilityService;
+    private final ye.gov.sanaa.healthoffice.service.RoleService roleService;
 
     // ===== Dashboard =====
     @GetMapping("/dashboard/stats")
@@ -235,6 +236,17 @@ public class AdminController {
     @GetMapping("/employees/{id}")
     public ResponseEntity<AdminDto> getEmployee(@PathVariable Long id) {
         return ResponseEntity.ok(adminService.getEmployee(id));
+    }
+
+    // ===== Roles & Permissions (for permission management UI) =====
+    @GetMapping("/roles")
+    public ResponseEntity<java.util.List<RoleDto>> getAllRoles() {
+        return ResponseEntity.ok(roleService.getAllRoles());
+    }
+
+    @GetMapping("/permissions")
+    public ResponseEntity<java.util.List<PermissionDto>> getAllPermissions() {
+        return ResponseEntity.ok(roleService.getAllPermissions());
     }
 
     // ===== Facilities (filter, operational status) =====

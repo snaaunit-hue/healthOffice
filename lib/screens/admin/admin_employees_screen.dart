@@ -14,6 +14,7 @@ class AdminEmployeesScreen extends StatefulWidget {
 
 class _AdminEmployeesScreenState extends State<AdminEmployeesScreen> {
   List<dynamic> _employees = [];
+  List<dynamic> _roles = []; // الأدوار من الـ API (code, nameAr, nameEn, permissionCodes)
   bool _isLoading = true;
   String? _error;
 
@@ -21,6 +22,15 @@ class _AdminEmployeesScreenState extends State<AdminEmployeesScreen> {
   void initState() {
     super.initState();
     _fetchEmployees();
+    _fetchRoles();
+  }
+
+  Future<void> _fetchRoles() async {
+    try {
+      final api = context.read<AuthProvider>().apiService;
+      final list = await api.get('/admin/roles');
+      if (mounted && list is List) setState(() => _roles = list);
+    } catch (_) {}
   }
 
   Future<void> _fetchEmployees() async {
@@ -161,7 +171,7 @@ class _AdminEmployeesScreenState extends State<AdminEmployeesScreen> {
     final phoneCtrl = TextEditingController(text: emp?['phoneNumber']);
     final passwordCtrl = TextEditingController();
     
-    Set<String> selectedRoles = Set.from(emp?['roles'] ?? (isEdit ? [] : ['INSPECTOR']));
+    Set<String> selectedRoles = Set.from(List<String>.from(emp?['roles'] ?? (isEdit ? [] : ['LICENSING_OFFICER'])));
 
     showDialog(
       context: context,
@@ -180,13 +190,16 @@ class _AdminEmployeesScreenState extends State<AdminEmployeesScreen> {
                     TextField(controller: emailCtrl, decoration: const InputDecoration(labelText: 'البريد الإلكتروني')),
                     TextField(controller: phoneCtrl, decoration: const InputDecoration(labelText: 'رقم الهاتف')),
                     const SizedBox(height: 16),
-                    const Text('الصلاحيات والمهام:', style: TextStyle(fontWeight: FontWeight.bold)),
-                    _roleCheckbox('مدير نظام', 'ADMIN', selectedRoles, setDialogState),
-                    _roleCheckbox('مفتش ميداني', 'INSPECTOR', selectedRoles, setDialogState),
-                    _roleCheckbox('مراجع طلبات', 'REVIEWER', selectedRoles, setDialogState),
-                    _roleCheckbox('محاسب مالي', 'FINANCE', selectedRoles, setDialogState),
-                    _roleCheckbox('مسؤول الإعلام', 'MEDIA', selectedRoles, setDialogState),
-                    _roleCheckbox('مدير المخالفات', 'VIOLATION', selectedRoles, setDialogState),
+                    const Text('الدور / الصلاحيات:', style: TextStyle(fontWeight: FontWeight.bold)),
+                    if (_roles.isEmpty)
+                      const Padding(padding: EdgeInsets.all(8), child: Text('جاري تحميل الأدوار...', style: TextStyle(fontSize: 12)))
+                    else
+                      ...(_roles as List).map((r) => _roleCheckbox(
+                        r['nameAr'] ?? r['code'] ?? '', 
+                        r['code'] ?? '', 
+                        selectedRoles, 
+                        setDialogState,
+                      )),
                   ],
                 ),
               ),
@@ -217,7 +230,11 @@ class _AdminEmployeesScreenState extends State<AdminEmployeesScreen> {
                         _fetchEmployees();
                       }
                     } catch (e) {
-                       // Show error
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('خطأ: $e'), backgroundColor: AppTheme.errorRed),
+                        );
+                      }
                     }
                   },
                   child: const Text('حفظ'),
