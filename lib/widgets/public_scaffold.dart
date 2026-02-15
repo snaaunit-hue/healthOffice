@@ -160,7 +160,18 @@ class PublicScaffold extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const Icon(Icons.local_hospital, color: Colors.white, size: 40),
+                ClipOval(
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    color: Colors.white,
+                    child: Image.asset(
+                      'assets/images/app_icon.png',
+                      width: 45,
+                      height: 45,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Text(
                   loc.translate('appTitle'),

@@ -112,14 +112,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   // Emblem
                   Container(
-                    width: 90,
-                    height: 90,
+                    width: 100,
+                    height: 100,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.15),
+                      color: Colors.white,
                       border: Border.all(color: AppTheme.accentGold, width: 3),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        )
+                      ],
                     ),
-                    child: const Icon(Icons.local_hospital, color: Colors.white, size: 48),
+                    child: ClipOval(
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Image.asset(
+                          'assets/images/app_icon.png',
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
                   ).animate().fadeIn(duration: 600.ms).scale(delay: 200.ms),
                   const SizedBox(height: 24),
                   Text(

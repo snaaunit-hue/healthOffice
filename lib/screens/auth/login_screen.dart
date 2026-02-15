@@ -65,15 +65,23 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 100, height: 100,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.15),
-                          border: Border.all(color: AppTheme.accentGold, width: 3),
-                        ),
-                        child: const Icon(Icons.local_hospital, color: Colors.white, size: 56),
-                      ).animate().fadeIn().scale(delay: 200.ms),
+                        Container(
+                          width: 140, height: 140,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            border: Border.all(color: AppTheme.accentGold, width: 2),
+                            boxShadow: [
+                              BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 4)),
+                            ],
+                          ),
+                          child: ClipOval(
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Image.asset('assets/images/app_icon.png', fit: BoxFit.contain),
+                            ),
+                          ),
+                        ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
                       const SizedBox(height: 32),
                       Text(
                         loc.translate('appTitle'),
@@ -102,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       if (!isWide) ...[
-                        const Icon(Icons.local_hospital, size: 48, color: AppTheme.primaryGreen),
+                        Image.asset('assets/images/app_icon.png', height: 60),
                         const SizedBox(height: 16),
                         Text(loc.translate('appTitle'), textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                         const SizedBox(height: 24),

@@ -194,7 +194,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         color: Colors.white.withOpacity(0.1),
                         border: Border.all(color: AppTheme.accentGold, width: 2),
                       ),
-                      child: const Icon(Icons.local_hospital, color: Colors.white, size: 24),
+                      child: ClipOval(
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Image.asset('assets/images/app_icon.png', fit: BoxFit.contain),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Text(loc.translate('dashboard'), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),

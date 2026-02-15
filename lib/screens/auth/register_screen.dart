@@ -129,13 +129,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: 120, height: 120,
+                          width: 140, height: 140,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.1),
+                            color: Colors.white,
                             border: Border.all(color: AppTheme.accentGold, width: 2),
+                            boxShadow: [
+                              BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 4)),
+                            ],
                           ),
-                          child: const Icon(Icons.person_add_outlined, color: Colors.white, size: 60),
+                          child: ClipOval(
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Image.asset('assets/images/app_icon.png', fit: BoxFit.contain),
+                            ),
+                          ),
                         ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
                         const SizedBox(height: 32),
                         const Text(
@@ -168,7 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         if (!isWide) ...[
-                          const Icon(Icons.local_hospital, size: 48, color: AppTheme.primaryGreen),
+                          Image.asset('assets/images/app_icon.png', height: 60),
                           const SizedBox(height: 16),
                         ],
                         Text(
