@@ -1,16 +1,23 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:health_office;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password: password
-    driver-class-name: org.h2.Driver
+    # H2 Database (Commented out)
+    # url: jdbc:h2:mem:health_office;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    # username: sa
+    # password: password
+    # driver-class-name: org.h2.Driver
+    
+    # PostgreSQL Configuration (Active)
+    url: jdbc:postgresql://localhost:5432/health_office_db
+    username: postgres
+    password: password # CHECK THIS: Update if your local DB password is different
+    driver-class-name: org.postgresql.Driver
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     open-in-view: false
   h2:

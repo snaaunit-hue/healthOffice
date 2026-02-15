@@ -16,6 +16,8 @@ import ye.gov.sanaa.healthoffice.repository.FacilityUserRepository;
 import ye.gov.sanaa.healthoffice.repository.InspectionRepository;
 import ye.gov.sanaa.healthoffice.repository.LicenseRepository;
 import ye.gov.sanaa.healthoffice.repository.ApplicationRepository;
+import ye.gov.sanaa.healthoffice.repository.spec.FacilitySpecification;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.UUID;
@@ -182,21 +184,19 @@ public class FacilityService {
     }
 
     @Transactional(readOnly = true)
-    public Page<FacilityDto> getAllFiltered(String facilityType, String governorate, String district,
-                                            String operationalStatus, Pageable pageable) {
-        if (facilityType != null && !facilityType.isBlank() && operationalStatus != null && !operationalStatus.isBlank()) {
-            return facilityRepository.findByFacilityTypeAndOperationalStatus(facilityType, operationalStatus, pageable)
-                    .map(this::mapToDto);
-        }
-        if (operationalStatus != null && !operationalStatus.isBlank()) {
-            return facilityRepository.findByOperationalStatus(operationalStatus, pageable).map(this::mapToDto);
-        }
-        if (governorate != null && !governorate.isBlank()) {
-            return facilityRepository.findByGovernorate(governorate, pageable).map(this::mapToDto);
-        }
-        if (district != null && !district.isBlank()) {
-            return facilityRepository.findByDistrict(district, pageable).map(this::mapToDto);
-        }
-        return facilityRepository.findAll(pageable).map(this::mapToDto);
+    public Page<FacilityDto> getAllFiltered(
+            String search,
+            String governorate,
+            String district,
+            String facilityType,
+            String operationalStatus,
+            String sector,
+            Pageable pageable) {
+        
+        Specification<Facility> spec = FacilitySpecification.filterBy(
+                search, governorate, district, facilityType, operationalStatus, sector
+        );
+        
+        return facilityRepository.findAll(spec, pageable).map(this::mapToDto);
     }
 }

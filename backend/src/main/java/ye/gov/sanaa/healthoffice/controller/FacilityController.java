@@ -29,12 +29,27 @@ public class FacilityController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<FacilityDto>> getAll(Pageable pageable) {
-        return ResponseEntity.ok(facilityService.getAll(pageable));
+    public ResponseEntity<Page<FacilityDto>> getAll(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String governorate,
+            @RequestParam(required = false) String district,
+            @RequestParam(required = false) String facilityType,
+            @RequestParam(required = false) String operationalStatus,
+            @RequestParam(required = false) String sector,
+            Pageable pageable) {
+        return ResponseEntity.ok(facilityService.getAllFiltered(search, governorate, district, facilityType, operationalStatus, sector, pageable));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FacilityDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(facilityService.getById(id));
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<FacilityDto> updateOperationalStatus(
+            @PathVariable Long id,
+            @RequestParam String status,
+            @RequestParam Long adminId) {
+        return ResponseEntity.ok(facilityService.updateOperationalStatus(id, status, adminId));
     }
 }

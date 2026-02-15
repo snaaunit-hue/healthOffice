@@ -196,6 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildQuickServices(BuildContext context, AppLocalizations loc, bool isWide) {
     final services = [
       {'icon': Icons.add_business, 'key': 'newApplication', 'path': '/login'},
+      {'icon': Icons.local_hospital, 'key': 'facilities', 'path': '/facilities-dashboard'},
       {'icon': Icons.verified_user, 'key': 'verifyLicense', 'path': '/license-lookup'},
       {'icon': Icons.track_changes, 'key': 'trackApplication', 'path': '/login'},
       {'icon': Icons.gavel, 'key': 'violations', 'path': '/login'},

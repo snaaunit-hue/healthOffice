@@ -34,6 +34,8 @@ import '../screens/admin/admin_employees_screen.dart';
 import '../screens/admin/media_management_screen.dart';
 import '../screens/admin/admin_users_screen.dart';
 import '../screens/public/public_license_search_screen.dart';
+import '../features/facilities/presentation/facility_dashboard_screen.dart';
+import '../features/facilities/presentation/facility_detail_screen.dart';
 
 
 GoRouter createRouter(AuthProvider authProvider) {
@@ -109,6 +111,15 @@ GoRouter createRouter(AuthProvider authProvider) {
       GoRoute(path: '/admin/employees', builder: (_, __) => const AdminEmployeesScreen()),
       GoRoute(path: '/admin/media', builder: (_, __) => const MediaManagementScreen()),
       GoRoute(path: '/admin/users', builder: (_, __) => const AdminUsersScreen()),
+
+      // Facilities Dashboard (Public/Employee)
+      GoRoute(path: '/facilities-dashboard', builder: (_, __) => const FacilityDashboardScreen()),
+      GoRoute(
+        path: '/facilities-dashboard/:id',
+        builder: (_, state) => FacilityDetailScreen(
+          facilityId: int.parse(state.pathParameters['id']!),
+        ),
+      ),
     ],
     redirect: (BuildContext context, GoRouterState state) {
       final isLoggedIn = authProvider.isLoggedIn;

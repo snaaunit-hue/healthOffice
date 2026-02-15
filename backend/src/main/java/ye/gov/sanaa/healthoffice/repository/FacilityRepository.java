@@ -8,7 +8,9 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface FacilityRepository extends JpaRepository<Facility, Long> {
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+public interface FacilityRepository extends JpaRepository<Facility, Long>, JpaSpecificationExecutor<Facility> {
     Optional<Facility> findByFacilityCode(String facilityCode);
 
     List<Facility> findByFacilityType(String facilityType);
