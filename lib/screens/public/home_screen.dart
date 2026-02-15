@@ -127,11 +127,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     child: ClipOval(
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
+                      child: Transform.scale(
+                        scale: 1.2,
                         child: Image.asset(
                           'assets/images/app_icon.png',
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),

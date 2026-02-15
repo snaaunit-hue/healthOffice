@@ -76,9 +76,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                             ],
                           ),
                           child: ClipOval(
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Image.asset('assets/images/app_icon.png', fit: BoxFit.contain),
+                            child: Transform.scale(
+                              scale: 1.2,
+                              child: Image.asset('assets/images/app_icon.png', fit: BoxFit.cover),
                             ),
                           ),
                         ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
@@ -110,7 +110,25 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       if (!isWide) ...[
-                        Image.asset('assets/images/app_icon.png', height: 60),
+                        Center(
+                          child: Container(
+                            width: 80, height: 80,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                              border: Border.all(color: AppTheme.accentGold, width: 2),
+                              boxShadow: [
+                                BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 8),
+                              ],
+                            ),
+                            child: ClipOval(
+                              child: Transform.scale(
+                                scale: 1.2,
+                                child: Image.asset('assets/images/app_icon.png', fit: BoxFit.cover),
+                              ),
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 16),
                         Text(loc.translate('appTitle'), textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                         const SizedBox(height: 24),

@@ -162,13 +162,15 @@ class PublicScaffold extends StatelessWidget {
               children: [
                 ClipOval(
                   child: Container(
-                    padding: const EdgeInsets.all(4),
                     color: Colors.white,
-                    child: Image.asset(
-                      'assets/images/app_icon.png',
-                      width: 45,
-                      height: 45,
-                      fit: BoxFit.contain,
+                    child: Transform.scale(
+                      scale: 1.2,
+                      child: Image.asset(
+                        'assets/images/app_icon.png',
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),

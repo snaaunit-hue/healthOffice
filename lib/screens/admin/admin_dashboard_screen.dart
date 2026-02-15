@@ -195,9 +195,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         border: Border.all(color: AppTheme.accentGold, width: 2),
                       ),
                       child: ClipOval(
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Image.asset('assets/images/app_icon.png', fit: BoxFit.contain),
+                        child: Transform.scale(
+                          scale: 1.2,
+                          child: Image.asset('assets/images/app_icon.png', fit: BoxFit.cover),
                         ),
                       ),
                     ),
