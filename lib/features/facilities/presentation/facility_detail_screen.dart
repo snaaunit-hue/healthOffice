@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/localization/app_localizations.dart';
 import '../data/facility_model.dart';
 import '../data/facility_repository.dart';
 
@@ -44,11 +45,11 @@ class _FacilityDetailScreenState extends State<FacilityDetailScreen> {
       await _repository.updateStatus(widget.facilityId, newStatus, adminId);
       await _fetchDetails();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Status updated successfully')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.translate('statusUpdatedSuccessfully'))));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error updating status: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.translate('errorUpdatingStatus')}: $e')));
       }
     }
   }
@@ -60,7 +61,7 @@ class _FacilityDetailScreenState extends State<FacilityDetailScreen> {
     }
 
     if (_facility == null) {
-      return const Scaffold(body: Center(child: Text('Facility not found')));
+      return Scaffold(body: Center(child: Text(AppLocalizations.of(context)!.translate('facilityNotFound'))));
     }
 
     return Scaffold(
@@ -72,16 +73,16 @@ class _FacilityDetailScreenState extends State<FacilityDetailScreen> {
           children: [
             _buildHeader(),
             const Divider(height: 32),
-            _buildDetailRow('Code', _facility!.facilityCode),
-            _buildDetailRow('Type', _facility!.facilityType),
-            _buildDetailRow('Specialty', _facility!.specialty ?? '-'),
-            _buildDetailRow('Sector', _facility!.sector ?? '-'),
-            _buildDetailRow('Governorate', _facility!.governorate ?? '-'),
-            _buildDetailRow('District', _facility!.district ?? '-'),
-            _buildDetailRow('Area/Street', '${_facility!.area ?? ""} - ${_facility!.street ?? ""}'),
-            _buildDetailRow('Property Owner', _facility!.propertyOwner ?? '-'),
+            _buildDetailRow(AppLocalizations.of(context)!.translate('facilityCode'), _facility!.facilityCode),
+            _buildDetailRow(AppLocalizations.of(context)!.translate('facilityType'), _facility!.facilityType),
+            _buildDetailRow(AppLocalizations.of(context)!.translate('specialty'), _facility!.specialty ?? '-'),
+            _buildDetailRow(AppLocalizations.of(context)!.translate('sector'), _facility!.sector ?? '-'),
+            _buildDetailRow(AppLocalizations.of(context)!.translate('governorate'), _facility!.governorate ?? '-'),
+            _buildDetailRow(AppLocalizations.of(context)!.translate('district'), _facility!.district ?? '-'),
+            _buildDetailRow(AppLocalizations.of(context)!.translate('area'), '${_facility!.area ?? ""} - ${_facility!.street ?? ""}'),
+            _buildDetailRow(AppLocalizations.of(context)!.translate('propertyOwner'), _facility!.propertyOwner ?? '-'),
             const SizedBox(height: 20),
-            const Text('Actions', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.translate('actions'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             Wrap(
               spacing: 10,
@@ -156,21 +157,21 @@ class _FacilityDetailScreenState extends State<FacilityDetailScreen> {
         if (_facility!.operationalStatus != 'ACTIVE')
           ElevatedButton.icon(
             icon: const Icon(Icons.check_circle),
-            label: const Text('Activate'),
+            label: Text(AppLocalizations.of(context)!.translate('activate')),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
             onPressed: () => _updateStatus('ACTIVE'),
           ),
         if (_facility!.operationalStatus != 'CLOSED')
           ElevatedButton.icon(
             icon: const Icon(Icons.block),
-            label: const Text('Close Facility'),
+            label: Text(AppLocalizations.of(context)!.translate('closeFacility')),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () => _updateStatus('CLOSED'),
           ),
         if (_facility!.operationalStatus != 'SUSPENDED')
           ElevatedButton.icon(
             icon: const Icon(Icons.pause_circle_filled),
-            label: const Text('Suspend'),
+            label: Text(AppLocalizations.of(context)!.translate('suspend')),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
             onPressed: () => _updateStatus('SUSPENDED'),
           ),

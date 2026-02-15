@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/localization/app_localizations.dart';
 import '../data/facility_model.dart';
 import '../data/facility_repository.dart';
 import 'facility_detail_screen.dart';
@@ -41,7 +42,7 @@ class _FacilityDashboardScreenState extends State<FacilityDashboardScreen> {
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading facilities: $e')),
+        SnackBar(content: Text('${AppLocalizations.of(context)!.translate('errorLoadingFacilities')}: $e')),
       );
     } finally {
       setState(() {
@@ -69,7 +70,7 @@ class _FacilityDashboardScreenState extends State<FacilityDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Facility Management'),
+        title: Text(AppLocalizations.of(context)!.translate('facilityManagement')),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
@@ -84,7 +85,7 @@ class _FacilityDashboardScreenState extends State<FacilityDashboardScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search by name or code...',
+                hintText: AppLocalizations.of(context)!.translate('searchFacilities'),
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 suffixIcon: IconButton(
@@ -103,7 +104,7 @@ class _FacilityDashboardScreenState extends State<FacilityDashboardScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _facilities.isEmpty
-                    ? const Center(child: Text('No facilities found'))
+                    ? Center(child: Text(AppLocalizations.of(context)!.translate('noFacilitiesFound')))
                     : ListView.builder(
                         itemCount: _facilities.length,
                         itemBuilder: (context, index) {
@@ -148,15 +149,15 @@ class _FacilityDashboardScreenState extends State<FacilityDashboardScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         children: [
-          _buildChip('All', null),
+          _buildChip(AppLocalizations.of(context)!.translate('all'), null),
           const SizedBox(width: 8),
-          _buildChip('Active', 'ACTIVE'),
+          _buildChip(AppLocalizations.of(context)!.translate('active'), 'ACTIVE'),
           const SizedBox(width: 8),
-          _buildChip('Closed', 'CLOSED'),
+          _buildChip(AppLocalizations.of(context)!.translate('closed'), 'CLOSED'),
           const SizedBox(width: 8),
-          _buildChip('Suspended', 'SUSPENDED'),
+          _buildChip(AppLocalizations.of(context)!.translate('suspended'), 'SUSPENDED'),
           const SizedBox(width: 8),
-          _buildChip('Under Review', 'UNDER_REVIEW'),
+          _buildChip(AppLocalizations.of(context)!.translate('underReview'), 'UNDER_REVIEW'),
         ],
       ),
     );
