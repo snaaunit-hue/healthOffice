@@ -58,8 +58,8 @@ class HealthOfficeApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: locale.isArabic ? AppConfig.appNameAr : AppConfig.appNameEn,
-      locale: locale.locale,
-      supportedLocales: const [Locale('ar'), Locale('en')],
+      locale: const Locale('ar'),
+      supportedLocales: const [Locale('ar')],
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

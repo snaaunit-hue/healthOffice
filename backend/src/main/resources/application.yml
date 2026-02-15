@@ -7,9 +7,10 @@ spring:
     # driver-class-name: org.h2.Driver
     
     # PostgreSQL Configuration (Active)
-    url: jdbc:postgresql://localhost:5432/health_office_db
-    username: postgres
-    password: password # CHECK THIS: Update if your local DB password is different
+    # Using Render External Database
+    url: jdbc:postgresql://dpg-d68do8er433s73cingc0-a.frankfurt-postgres.render.com:5432/health_office_db
+    username: health_office_db_user
+    password: uiGXHVr4K5CCDWrb8Nn8uvx4Emj6gVq0
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
